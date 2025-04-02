@@ -7,6 +7,11 @@ resource "aws_secretsmanager_secret" "app_secrets" {
   name        = "${var.project_name}-${var.environment}-app-secrets-${random_id.suffix.hex}"
   description = "Secrets for the ${var.project_name} application in ${var.environment} environment"
 
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
+
   tags = {
     Name        = "${var.project_name}-${var.environment}-app-secrets"
     Environment = var.environment

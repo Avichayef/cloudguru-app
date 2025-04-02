@@ -1,0 +1,50 @@
+name: Destroy AWS Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy (e.g., dev, staging, prod)'
+        required: true
+        default: 'dev'
+      confirm:
+        description: 'Type "destroy" to confirm'
+        required: true
+
+env:
+  AWS_REGION: us-east-1
+  TERRAFORM_DIR: terraform/environments/${{ github.event.inputs.environment }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy:
+    name: Destroy AWS Resources
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'destroy'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init
+        run: |
+          cd ${{ env.TERRAFORM_DIR }}
+          terraform init
+
+      - name: Terraform Destroy
+        run: |
+          cd ${{ env.TERRAFORM_DIR }}
+          terraform destroy -auto-approve

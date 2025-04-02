@@ -15,6 +15,11 @@ resource "aws_iam_role" "ecs_execution_role" {
     ]
   })
 
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
+
   tags = {
     Name = "${var.project_name}-${var.environment}-ecs-execution-role"
   }
@@ -37,6 +42,11 @@ resource "aws_iam_role" "ecs_task_role" {
     ]
   })
 
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
+
   tags = {
     Name = "${var.project_name}-${var.environment}-ecs-task-role"
   }
@@ -53,6 +63,11 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 resource "aws_iam_policy" "secrets_manager_access" {
   name        = "${var.project_name}-${var.environment}-secrets-manager-access"
   description = "Allow access to Secrets Manager"
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -79,6 +94,11 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_secrets_policy" {
 resource "aws_iam_policy" "ecs_task_policy" {
   name        = "${var.project_name}-${var.environment}-ecs-task-policy"
   description = "Custom policy for ECS tasks"
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
 
   policy = jsonencode({
     Version = "2012-10-17"

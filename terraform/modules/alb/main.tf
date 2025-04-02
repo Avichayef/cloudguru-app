@@ -9,6 +9,11 @@ resource "aws_lb" "main" {
   enable_deletion_protection = false
   drop_invalid_header_fields = true
 
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
+
   tags = {
     Name = "${var.project_name}-${var.environment}-alb"
   }
@@ -30,6 +35,11 @@ resource "aws_lb_target_group" "app" {
     port                = "traffic-port"
     protocol            = "HTTP"
     matcher             = "200-499"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
   }
 
   tags = {

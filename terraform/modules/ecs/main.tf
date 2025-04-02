@@ -16,6 +16,11 @@ resource "aws_cloudwatch_log_group" "ecs" {
   name              = "/ecs/${var.project_name}-${var.environment}"
   retention_in_days = 30
 
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
+
   tags = {
     Name = "${var.project_name}-${var.environment}-log-group"
   }

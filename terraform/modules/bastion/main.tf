@@ -16,6 +16,11 @@ data "aws_ami" "amazon_linux" {
 resource "aws_key_pair" "bastion" {
   key_name   = "${var.project_name}-${var.environment}-bastion-key"
   public_key = var.ssh_public_key
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+  }
 }
 
 resource "aws_instance" "bastion" {
