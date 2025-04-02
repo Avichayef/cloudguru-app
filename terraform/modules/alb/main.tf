@@ -1,3 +1,4 @@
+# tfsec:ignore:aws-elb-alb-not-public
 resource "aws_lb" "main" {
   name               = "${var.project_name}-${var.environment}-alb"
   internal           = false

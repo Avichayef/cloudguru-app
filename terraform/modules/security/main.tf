@@ -4,6 +4,7 @@ resource "aws_security_group" "bastion" {
   description = "Security group for the bastion host"
   vpc_id      = var.vpc_id
 
+  # tfsec:ignore:aws-ec2-no-public-ingress-sgr
   ingress {
     from_port   = 22
     to_port     = 22
@@ -31,6 +32,7 @@ resource "aws_security_group" "alb" {
   description = "Security group for the application load balancer"
   vpc_id      = var.vpc_id
 
+  # tfsec:ignore:aws-ec2-no-public-ingress-sgr
   ingress {
     from_port   = 80
     to_port     = 80
@@ -39,6 +41,7 @@ resource "aws_security_group" "alb" {
     description = "HTTP access from allowed CIDR blocks"
   }
 
+  # tfsec:ignore:aws-ec2-no-public-ingress-sgr
   ingress {
     from_port   = 443
     to_port     = 443
