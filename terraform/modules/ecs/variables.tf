@@ -74,11 +74,11 @@ variable "secrets_manager_arn" {
 variable "container_secrets" {
   description = "Secrets to pass to the container"
   type        = map(string)
-  default     = {
+  default = {
     "DB_PASSWORD" = "placeholder"
     "API_KEY"     = "placeholder"
   }
-  sensitive   = true
+  sensitive = true
 }
 
 variable "aws_region" {

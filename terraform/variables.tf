@@ -43,7 +43,7 @@ variable "availability_zones" {
 variable "bastion_allowed_cidr" {
   description = "CIDR block allowed to access the bastion host"
   type        = string
-  default     = "0.0.0.0/0"  # This should be replaced with your IP
+  default     = "0.0.0.0/0" # This should be replaced with your IP
 }
 
 variable "bastion_instance_type" {
@@ -55,7 +55,7 @@ variable "bastion_instance_type" {
 variable "app_container_image" {
   description = "Container image for the application"
   type        = string
-  default     = "nginx:latest"  # Replace with your app image
+  default     = "nginx:latest" # Replace with your app image
 }
 
 variable "app_container_port" {
@@ -85,10 +85,10 @@ variable "fargate_memory" {
 variable "app_secrets" {
   description = "Secrets for the application"
   type        = map(string)
-  default     = {
+  default = {
     # These are placeholders and should be replaced with actual secrets
     "DB_PASSWORD" = "placeholder"
     "API_KEY"     = "placeholder"
   }
-  sensitive   = true
+  sensitive = true
 }

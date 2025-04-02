@@ -57,18 +57,18 @@ module "alb" {
 module "ecs" {
   source = "./modules/ecs"
 
-  vpc_id                = module.vpc.vpc_id
-  private_subnet_ids    = module.vpc.private_subnet_ids
-  ecs_sg_id             = module.security.ecs_sg_id
-  execution_role_arn    = module.iam.ecs_execution_role_arn
-  task_role_arn         = module.iam.ecs_task_role_arn
-  app_container_image   = var.app_container_image
-  app_container_port    = var.app_container_port
-  app_count             = var.app_count
-  fargate_cpu           = var.fargate_cpu
-  fargate_memory        = var.fargate_memory
-  alb_target_group_arn  = module.alb.target_group_arn
-  secrets_manager_arn   = module.secrets.secret_arn
-  environment           = var.environment
-  project_name          = var.project_name
+  vpc_id               = module.vpc.vpc_id
+  private_subnet_ids   = module.vpc.private_subnet_ids
+  ecs_sg_id            = module.security.ecs_sg_id
+  execution_role_arn   = module.iam.ecs_execution_role_arn
+  task_role_arn        = module.iam.ecs_task_role_arn
+  app_container_image  = var.app_container_image
+  app_container_port   = var.app_container_port
+  app_count            = var.app_count
+  fargate_cpu          = var.fargate_cpu
+  fargate_memory       = var.fargate_memory
+  alb_target_group_arn = module.alb.target_group_arn
+  secrets_manager_arn  = module.secrets.secret_arn
+  environment          = var.environment
+  project_name         = var.project_name
 }

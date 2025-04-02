@@ -83,13 +83,13 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "main" {
-  name                               = "${var.project_name}-${var.environment}-service"
-  cluster                            = aws_ecs_cluster.main.id
-  task_definition                    = aws_ecs_task_definition.app.arn
-  desired_count                      = var.app_count
-  launch_type                        = "FARGATE"
-  platform_version                   = "LATEST"
-  health_check_grace_period_seconds  = 60
+  name                              = "${var.project_name}-${var.environment}-service"
+  cluster                           = aws_ecs_cluster.main.id
+  task_definition                   = aws_ecs_task_definition.app.arn
+  desired_count                     = var.app_count
+  launch_type                       = "FARGATE"
+  platform_version                  = "LATEST"
+  health_check_grace_period_seconds = 60
 
   network_configuration {
     security_groups  = [var.ecs_sg_id]
