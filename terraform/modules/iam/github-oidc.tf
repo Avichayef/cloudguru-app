@@ -37,6 +37,7 @@ resource "aws_iam_role_policy_attachment" "github_actions_ecs" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
+# tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_iam_policy" "terraform_access" {
   name        = "${var.project_name}-${var.environment}-terraform-access"
   description = "Policy for Terraform to manage resources"

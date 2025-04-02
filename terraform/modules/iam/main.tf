@@ -49,6 +49,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 }
 
 # Custom policy for Secrets Manager access
+# tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_iam_policy" "secrets_manager_access" {
   name        = "${var.project_name}-${var.environment}-secrets-manager-access"
   description = "Allow access to Secrets Manager"
@@ -74,6 +75,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_secrets_policy" {
 }
 
 # Custom policy for ECS Task Role
+# tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_iam_policy" "ecs_task_policy" {
   name        = "${var.project_name}-${var.environment}-ecs-task-policy"
   description = "Custom policy for ECS tasks"

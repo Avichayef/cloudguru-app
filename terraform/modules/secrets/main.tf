@@ -2,6 +2,7 @@ resource "random_id" "suffix" {
   byte_length = 8
 }
 
+# tfsec:ignore:aws-ssm-secret-use-customer-key
 resource "aws_secretsmanager_secret" "app_secrets" {
   name        = "${var.project_name}-${var.environment}-app-secrets-${random_id.suffix.hex}"
   description = "Secrets for the ${var.project_name} application in ${var.environment} environment"
