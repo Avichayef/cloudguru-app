@@ -32,3 +32,8 @@ output "ecs_service_name" {
   description = "The name of the ECS service"
   value       = module.ecs.service_name
 }
+
+output "github_actions_role_arn" {
+  description = "The ARN of the GitHub Actions role"
+  value       = module.iam.github_actions_role_arn
+}
