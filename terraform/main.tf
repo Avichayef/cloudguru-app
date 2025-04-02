@@ -15,6 +15,7 @@ module "security" {
   vpc_id               = module.vpc.vpc_id
   vpc_cidr             = var.vpc_cidr
   bastion_allowed_cidr = var.bastion_allowed_cidr
+  allowed_cidr_blocks  = var.allowed_cidr_blocks
   environment          = var.environment
   project_name         = var.project_name
 }

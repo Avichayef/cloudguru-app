@@ -28,3 +28,9 @@ variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
 }
+
+variable "allowed_cidr_blocks" {
+  description = "CIDR blocks allowed to access the ALB"
+  type        = string
+  default     = "10.0.0.0/8"
+}
