@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  db:
+    # Using MariaDB for better compatibility with both amd64 & arm64 architectures
+    image: mariadb:10.6
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--password=$$(cat /run/secrets/db-password)", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend-network
+    environment:
+      - MYSQL_DATABASE=example
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+    expose:
+      - 3306
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    secrets:
+      - db-password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend-network
+      - frontend-network
+    expose:
+      - 8000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+      # Add a sidecar container for logging
+      replicas: 2
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Sidecar container for metrics collection
+  metrics:
+    image: prom/prometheus:v2.30.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - backend-network
+    depends_on:
+      - backend
+    expose:
+      - 9090
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - frontend-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: ./db/password.txt
+
+networks:
+  backend-network:
+  frontend-network:
