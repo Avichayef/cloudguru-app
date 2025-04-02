@@ -25,6 +25,10 @@ resource "aws_iam_role" "github_actions" {
       }
     ]
   })
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_ecr" {
@@ -42,6 +46,10 @@ resource "aws_iam_policy" "terraform_access" {
   name        = "${var.project_name}-${var.environment}-terraform-access"
   description = "Policy for Terraform to manage resources"
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -58,7 +66,8 @@ resource "aws_iam_policy" "terraform_access" {
           "cloudwatch:*",
           "application-autoscaling:*",
           "autoscaling:*",
-          "route53:*"
+          "route53:*",
+          "acm:*"
         ]
         Resource = "*"
       }
