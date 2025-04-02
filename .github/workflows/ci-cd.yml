@@ -104,6 +104,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Create ECR Repositories if they don't exist
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          # Create backend repository if it doesn't exist
+          aws ecr describe-repositories --repository-names $ECR_REPOSITORY_BACKEND || \
+          aws ecr create-repository --repository-name $ECR_REPOSITORY_BACKEND
+
+          # Create proxy repository if it doesn't exist
+          aws ecr describe-repositories --repository-names $ECR_REPOSITORY_PROXY || \
+          aws ecr create-repository --repository-name $ECR_REPOSITORY_PROXY
+
       - name: Build, tag, and push backend image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
