@@ -16,8 +16,8 @@ resource "aws_security_group" "bastion" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow outbound traffic within VPC"
   }
 
   tags = {
@@ -51,8 +51,8 @@ resource "aws_security_group" "alb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow outbound traffic within VPC"
   }
 
   tags = {
@@ -94,8 +94,8 @@ resource "aws_security_group" "ecs" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow outbound traffic within VPC"
   }
 
   tags = {

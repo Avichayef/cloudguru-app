@@ -13,6 +13,7 @@ module "security" {
   source = "./modules/security"
 
   vpc_id               = module.vpc.vpc_id
+  vpc_cidr             = var.vpc_cidr
   bastion_allowed_cidr = var.bastion_allowed_cidr
   environment          = var.environment
   project_name         = var.project_name

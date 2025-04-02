@@ -23,3 +23,8 @@ variable "app_container_port" {
   type        = number
   default     = 80
 }
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+}
