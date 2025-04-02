@@ -52,6 +52,12 @@ variable "bastion_allowed_cidr" {
   default     = "0.0.0.0/0" # This should be replaced with your IP
 }
 
+variable "allowed_cidr_blocks" {
+  description = "CIDR blocks allowed to access the ALB"
+  type        = string
+  default     = "0.0.0.0/0" # This should be replaced with trusted networks
+}
+
 variable "bastion_instance_type" {
   description = "Instance type for the bastion host"
   type        = string

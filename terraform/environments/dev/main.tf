@@ -37,6 +37,8 @@ module "security" {
   source = "../../modules/security"
 
   vpc_id               = module.vpc.vpc_id
+  vpc_cidr             = var.vpc_cidr
+  allowed_cidr_blocks  = var.allowed_cidr_blocks
   bastion_allowed_cidr = var.bastion_allowed_cidr
   app_container_port   = var.app_container_port
   environment          = var.environment
