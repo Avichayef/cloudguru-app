@@ -6,8 +6,7 @@ WORKDIR /app
 
 COPY requirements.txt /app/
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
