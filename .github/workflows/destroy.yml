@@ -44,6 +44,11 @@ jobs:
           cd ${{ env.TERRAFORM_DIR }}
           terraform init
 
+      - name: Clean up existing resources
+        run: |
+          chmod +x scripts/cleanup-resources.sh
+          ./scripts/cleanup-resources.sh cloudguru-app ${{ github.event.inputs.environment }} ${{ env.AWS_REGION }}
+
       - name: Terraform Destroy
         run: |
           cd ${{ env.TERRAFORM_DIR }}

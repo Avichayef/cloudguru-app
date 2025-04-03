@@ -159,6 +159,11 @@ jobs:
           cd ${{ env.TERRAFORM_DIR }}
           terraform init
 
+      - name: Clean up existing resources
+        run: |
+          chmod +x scripts/cleanup-resources.sh
+          ./scripts/cleanup-resources.sh cloudguru-app dev ${{ env.AWS_REGION }}
+
       - name: Terraform Plan
         run: |
           cd ${{ env.TERRAFORM_DIR }}
