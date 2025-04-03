@@ -81,8 +81,8 @@ resource "aws_security_group" "endpoints" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow outbound traffic within VPC"
   }
 
   tags = {
