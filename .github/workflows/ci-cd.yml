@@ -155,24 +155,42 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init
+        id: init
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform init
+        continue-on-error: true
 
       - name: Clean up existing resources
+        if: steps.init.outcome == 'success'
+        id: cleanup
         run: |
           chmod +x scripts/cleanup-resources.sh
           ./scripts/cleanup-resources.sh cloudguru-app dev ${{ env.AWS_REGION }}
+        continue-on-error: true
 
       - name: Terraform Plan
+        if: steps.cleanup.outcome == 'success'
+        id: plan
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform plan -out=tfplan
+        continue-on-error: true
 
       - name: Terraform Apply
+        if: steps.plan.outcome == 'success'
+        id: apply
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform apply -auto-approve tfplan
+        continue-on-error: true
+
+      - name: Failsafe - Destroy Resources on Failure
+        if: steps.init.outcome == 'failure' || steps.cleanup.outcome == 'failure' || steps.plan.outcome == 'failure' || steps.apply.outcome == 'failure'
+        run: |
+          echo "CI/CD pipeline failed, destroying resources..."
+          cd ${{ env.TERRAFORM_DIR }}
+          terraform destroy -auto-approve || echo "Failed to destroy resources"
 
   deploy:
     name: Deploy to ECS

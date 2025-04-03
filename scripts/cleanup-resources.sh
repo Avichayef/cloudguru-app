@@ -18,63 +18,8 @@ delete_resource() {
   aws $resource_type delete-$resource_id $extra_args || echo "Resource not found or already deleted"
 }
 
-# Create OIDC provider if it doesn't exist
-echo "Creating OIDC provider if it doesn't exist..."
-OIDC_PROVIDER_ARN=$(aws iam list-open-id-connect-providers --query "OpenIDConnectProviderList[?contains(Arn, 'token.actions.githubusercontent.com')].Arn" --output text)
-
-if [ -z "$OIDC_PROVIDER_ARN" ]; then
-  echo "Creating OIDC provider..."
-  OIDC_PROVIDER_ARN=$(aws iam create-open-id-connect-provider \
-    --url "https://token.actions.githubusercontent.com" \
-    --client-id-list "sts.amazonaws.com" \
-    --thumbprint-list "6938fd4d98bab03faadb97b34396831e3780aea1" \
-    --query "OpenIDConnectProviderArn" --output text) || echo "Failed to create OIDC provider"
-  echo "Created OIDC provider: $OIDC_PROVIDER_ARN"
-fi
-
-# Create initial GitHub Actions role with admin permissions if it doesn't exist
-echo "Creating initial GitHub Actions role if it doesn't exist..."
-ROLE_NAME="$PROJECT_NAME-$ENVIRONMENT-github-actions-role"
-ROLE_EXISTS=$(aws iam get-role --role-name $ROLE_NAME --query "Role.RoleName" --output text 2>/dev/null || echo "")
-
-if [ -z "$ROLE_EXISTS" ]; then
-  echo "Creating role $ROLE_NAME..."
-  # Create trust policy document
-  cat > /tmp/trust-policy.json << EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "$OIDC_PROVIDER_ARN"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-        },
-        "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:Avichayef/cloudguru-app:*"
-        }
-      }
-    }
-  ]
-}
-EOF
-
-  # Create role
-  aws iam create-role \
-    --role-name $ROLE_NAME \
-    --assume-role-policy-document file:///tmp/trust-policy.json || echo "Failed to create role"
-
-  # Attach AdministratorAccess policy to the role
-  aws iam attach-role-policy \
-    --role-name $ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AdministratorAccess || echo "Failed to attach policy"
-
-  echo "Created role $ROLE_NAME with AdministratorAccess"
-fi
+# Skip OIDC provider and role creation - these should be created manually using the bootstrap.sh script
+echo "Skipping OIDC provider and role creation - these should be created manually using the bootstrap.sh script"
 
 # Delete IAM policies
 echo "Deleting IAM policies..."

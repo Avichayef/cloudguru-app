@@ -40,16 +40,39 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init
+        id: init
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform init
+        continue-on-error: true
 
       - name: Clean up existing resources
+        if: steps.init.outcome == 'success'
+        id: cleanup
         run: |
           chmod +x scripts/cleanup-resources.sh
           ./scripts/cleanup-resources.sh cloudguru-app ${{ github.event.inputs.environment }} ${{ env.AWS_REGION }}
+        continue-on-error: true
 
       - name: Terraform Destroy
+        if: steps.cleanup.outcome == 'success'
+        id: destroy
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform destroy -auto-approve
+        continue-on-error: true
+
+      - name: Report Status
+        run: |
+          if [ "${{ steps.init.outcome }}" == "failure" ]; then
+            echo "Terraform init failed"
+            exit 1
+          elif [ "${{ steps.cleanup.outcome }}" == "failure" ]; then
+            echo "Resource cleanup failed"
+            exit 1
+          elif [ "${{ steps.destroy.outcome }}" == "failure" ]; then
+            echo "Terraform destroy failed"
+            exit 1
+          else
+            echo "All resources successfully destroyed"
+          fi
