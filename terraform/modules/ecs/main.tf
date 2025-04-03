@@ -97,6 +97,9 @@ resource "aws_ecs_service" "main" {
   platform_version                  = "LATEST"
   health_check_grace_period_seconds = 60
 
+  # Ensure the load balancer is created before the ECS service
+  depends_on = [var.lb_listener]
+
   network_configuration {
     security_groups  = [var.ecs_sg_id]
     subnets          = var.private_subnet_ids
@@ -113,7 +116,7 @@ resource "aws_ecs_service" "main" {
     ignore_changes = [desired_count]
   }
 
-  depends_on = [aws_ecs_task_definition.app]
+
 
   tags = {
     Name = "${var.project_name}-${var.environment}-service"

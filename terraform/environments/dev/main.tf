@@ -98,6 +98,7 @@ module "ecs" {
   app_count               = var.app_count
   fargate_cpu             = var.fargate_cpu
   fargate_memory          = var.fargate_memory
+  lb_listener             = module.alb.https_listener
   alb_target_group_arn    = module.alb.target_group_arn
   secrets_manager_arn     = module.secrets.secret_arn
   container_secrets       = var.app_secrets

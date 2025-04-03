@@ -12,3 +12,8 @@ output "target_group_arn" {
   description = "The ARN of the target group"
   value       = aws_lb_target_group.app.arn
 }
+
+output "https_listener" {
+  description = "The HTTPS listener"
+  value       = aws_lb_listener.https
+}

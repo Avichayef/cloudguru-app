@@ -96,3 +96,9 @@ variable "project_name" {
   description = "Name of the project"
   type        = string
 }
+
+variable "lb_listener" {
+  description = "The load balancer listener to depend on"
+  type        = any
+  default     = null
+}
