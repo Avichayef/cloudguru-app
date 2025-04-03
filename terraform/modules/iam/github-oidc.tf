@@ -1,5 +1,8 @@
-data "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
+# Use a variable for the OIDC provider ARN instead of a data source
+variable "github_oidc_provider_arn" {
+  description = "ARN of the GitHub OIDC provider"
+  type        = string
+  default     = "arn:aws:iam::784866907805:oidc-provider/token.actions.githubusercontent.com"
 }
 
 resource "aws_iam_role" "github_actions" {
@@ -11,7 +14,7 @@ resource "aws_iam_role" "github_actions" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = data.aws_iam_openid_connect_provider.github.arn
+          Federated = var.github_oidc_provider_arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {

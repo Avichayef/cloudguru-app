@@ -18,6 +18,14 @@ delete_resource() {
   aws $resource_type delete-$resource_id $extra_args || echo "Resource not found or already deleted"
 }
 
+# Create OIDC provider if it doesn't exist
+echo "Creating OIDC provider if it doesn't exist..."
+aws iam list-open-id-connect-providers --query "OpenIDConnectProviderList[?contains(Arn, 'token.actions.githubusercontent.com')].Arn" --output text > /dev/null 2>&1 || \
+aws iam create-open-id-connect-provider \
+  --url "https://token.actions.githubusercontent.com" \
+  --client-id-list "sts.amazonaws.com" \
+  --thumbprint-list "6938fd4d98bab03faadb97b34396831e3780aea1" || echo "Failed to create OIDC provider"
+
 # Delete IAM policies
 echo "Deleting IAM policies..."
 for policy_name in "$PROJECT_NAME-$ENVIRONMENT-terraform-access" "$PROJECT_NAME-$ENVIRONMENT-secrets-manager-access" "$PROJECT_NAME-$ENVIRONMENT-ecs-task-policy"; do
@@ -28,7 +36,7 @@ for policy_name in "$PROJECT_NAME-$ENVIRONMENT-terraform-access" "$PROJECT_NAME-
       echo "Detaching policy $policy_name from role $role"
       aws iam detach-role-policy --role-name $role --policy-arn $policy_arn || echo "Failed to detach policy"
     done
-    
+
     # Delete policy
     echo "Deleting policy $policy_name"
     aws iam delete-policy --policy-arn $policy_arn || echo "Failed to delete policy"
@@ -45,7 +53,7 @@ for role_name in "$PROJECT_NAME-$ENVIRONMENT-github-actions-role" "$PROJECT_NAME
       echo "Detaching policy $policy_arn from role $role_name"
       aws iam detach-role-policy --role-name $role_name --policy-arn $policy_arn || echo "Failed to detach policy"
     done
-    
+
     # Delete role
     echo "Deleting role $role_name"
     aws iam delete-role --role-name $role_name || echo "Failed to delete role"
