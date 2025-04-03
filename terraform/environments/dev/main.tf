@@ -29,6 +29,8 @@ module "vpc" {
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
   availability_zones   = var.availability_zones
+  endpoint_sg_id       = "sg-placeholder" # Will be updated later
+  aws_region           = var.aws_region
   environment          = var.environment
   project_name         = var.project_name
 }
@@ -44,6 +46,8 @@ module "security" {
   environment          = var.environment
   project_name         = var.project_name
 }
+
+
 
 module "bastion" {
   source = "../../modules/bastion"

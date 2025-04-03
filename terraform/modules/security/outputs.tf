@@ -12,3 +12,8 @@ output "ecs_sg_id" {
   description = "The ID of the ECS security group"
   value       = aws_security_group.ecs.id
 }
+
+output "endpoints_sg_id" {
+  description = "The ID of the VPC endpoints security group"
+  value       = aws_security_group.endpoints.id
+}
