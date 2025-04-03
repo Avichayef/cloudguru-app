@@ -70,7 +70,44 @@ resource "aws_iam_policy" "terraform_access" {
           "application-autoscaling:*",
           "autoscaling:*",
           "route53:*",
-          "acm:*"
+          "acm:*",
+          "ecr:*",
+          "ecs:*",
+          "kms:*",
+          "elasticfilesystem:*",
+          "elasticache:*",
+          "rds:*",
+          "lambda:*",
+          "apigateway:*",
+          "cloudfront:*",
+          "events:*",
+          "sns:*",
+          "sqs:*",
+          "dynamodb:*",
+          "tag:*"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateTags",
+          "ec2:DeleteTags",
+          "ec2:AllocateAddress",
+          "ec2:ImportKeyPair",
+          "logs:TagResource",
+          "logs:UntagResource",
+          "logs:CreateLogGroup",
+          "logs:DeleteLogGroup",
+          "acm:RequestCertificate",
+          "acm:DeleteCertificate",
+          "acm:ImportCertificate",
+          "iam:CreateRole",
+          "iam:DeleteRole",
+          "iam:CreatePolicy",
+          "iam:DeletePolicy",
+          "secretsmanager:CreateSecret",
+          "secretsmanager:DeleteSecret"
         ]
         Resource = "*"
       }
