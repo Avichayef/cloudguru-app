@@ -22,19 +22,6 @@ terraform {
   # }
 }
 
-module "vpc" {
-  source = "../../modules/vpc"
-
-  vpc_cidr             = var.vpc_cidr
-  public_subnet_cidrs  = var.public_subnet_cidrs
-  private_subnet_cidrs = var.private_subnet_cidrs
-  availability_zones   = var.availability_zones
-  endpoint_sg_id       = "sg-placeholder" # Will be updated later
-  aws_region           = var.aws_region
-  environment          = var.environment
-  project_name         = var.project_name
-}
-
 module "security" {
   source = "../../modules/security"
 
@@ -43,6 +30,18 @@ module "security" {
   allowed_cidr_blocks  = var.allowed_cidr_blocks
   bastion_allowed_cidr = var.bastion_allowed_cidr
   app_container_port   = var.app_container_port
+  environment          = var.environment
+  project_name         = var.project_name
+}
+
+module "vpc" {
+  source = "../../modules/vpc"
+
+  vpc_cidr             = var.vpc_cidr
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  availability_zones   = var.availability_zones
+  aws_region           = var.aws_region
   environment          = var.environment
   project_name         = var.project_name
 }

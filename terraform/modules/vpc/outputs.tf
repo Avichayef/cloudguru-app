@@ -17,3 +17,8 @@ output "nat_gateway_id" {
   description = "The ID of the NAT Gateway"
   value       = aws_nat_gateway.main.id
 }
+
+output "endpoints_sg_id" {
+  description = "The ID of the VPC endpoints security group"
+  value       = aws_security_group.endpoints.id
+}

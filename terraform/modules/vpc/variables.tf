@@ -34,7 +34,4 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "endpoint_sg_id" {
-  description = "Security group ID for VPC endpoints"
-  type        = string
-}
+

@@ -107,6 +107,33 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
+# Security group for VPC endpoints
+resource "aws_security_group" "endpoints" {
+  name        = "${var.project_name}-${var.environment}-endpoints-sg"
+  description = "Security group for VPC endpoints"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+    description = "HTTPS access from within VPC"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow outbound traffic within VPC"
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-endpoints-sg"
+  }
+}
+
 # VPC Endpoint for Secrets Manager
 resource "aws_vpc_endpoint" "secretsmanager" {
   vpc_id              = aws_vpc.main.id
@@ -114,7 +141,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = aws_subnet.private[*].id
-  security_group_ids  = [var.endpoint_sg_id]
+  security_group_ids  = [aws_security_group.endpoints.id]
 
   tags = {
     Name = "${var.project_name}-${var.environment}-secretsmanager-endpoint"
